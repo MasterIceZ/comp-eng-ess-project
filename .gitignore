@@ -7,3 +7,6 @@ frontend/package-lock.json
 
 # env
 .env
+
+# MAC
+.DS_Store
