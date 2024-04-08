@@ -1,6 +1,2 @@
-const config = {
-  BACKEND_PORT: 3222,
-  FRONTEND_PORT: 3221,
-};
-
-export default config;
+export const BACKEND_PORT = 3222;
+export const BACKEND_URL = `http://localhost:${BACKEND_PORT}`;

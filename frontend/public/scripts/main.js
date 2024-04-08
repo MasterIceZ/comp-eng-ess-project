@@ -1,19 +1,12 @@
-// import config from "./config.js";
+import { handleGET, handlePOST } from "./handleApi.js";
 
-async function handleClickGET() {
-  const res = await fetch(`http://localhost:${3222}/hello`);
-  const data = await res.json();
-  console.log(data);
-}
-
-async function handleClickPOST() {
-  const res = await fetch(`http://localhost:${3222}/hello`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ sender: "frontend" }),
+document.addEventListener("DOMContentLoaded", () => {
+  const GETButton = document.getElementById("clickGET");
+  GETButton.addEventListener("click", () => {
+    handleGET();
   });
-  const data = await res.json();
-  console.log(data);
-}
+  const POSTButton = document.getElementById("clickPOST");
+  POSTButton.addEventListener("click", () => {
+    handlePOST();
+  });
+});
