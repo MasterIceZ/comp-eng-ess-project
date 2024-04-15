@@ -38,5 +38,7 @@ export const handlePATCH = async (req, res) => {
     });
 
     await player.save();
+
+    res.json(player);
   }
 };
