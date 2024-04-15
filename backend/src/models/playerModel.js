@@ -27,6 +27,10 @@ const playerSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
+  power: {
+    type: Number,
+    default: 1,
+  },
 });
 
 const Player = mongoose.model("Player", playerSchema);

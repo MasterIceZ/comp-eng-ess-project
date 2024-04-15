@@ -22,3 +22,17 @@ export const handlePOST = async (req, res) => {
 
   res.json(tile);
 };
+
+export const handlePATCH = async (req, res) => {
+  const tile = await Tile.findOne({ x: req.body.x, y: req.body.y });
+
+  if (req.body.type === "capture") {
+    tile.capture = req.body.name;
+  } else if (req.body.type === "construction") {
+    tile.construction = req.body.name;
+  }
+
+  await tile.save();
+
+  res.json(tile);
+};

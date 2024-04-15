@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.get("/", tileController.handleGET);
 router.post("/", tileController.handlePOST);
+router.patch("/", tileController.handlePATCH);
 
 export default router;
