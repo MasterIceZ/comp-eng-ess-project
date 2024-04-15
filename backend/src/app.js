@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
 
-import Hello from "./routes/helloRoute.js";
+import Player from "./routes/playerRoute.js";
+import Tile from "./routes/tileRoute.js";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(
 app.use(cors());
 
 // routes
-app.use("/hello", Hello);
+app.use("/player", Player);
+app.use("/tile", Tile);
 
 export default app;
