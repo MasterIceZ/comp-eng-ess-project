@@ -6,6 +6,7 @@ const config = {
   width: gameUtils.SCREEN_SIZE.w,
   height: gameUtils.SCREEN_SIZE.h,
   parent: "gameContainer",
+  backgroundColor: 0xd3d3d3,
   scene: {
     preload: preload,
     create: create,
