@@ -1,15 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/phaser@v3.80.1/dist/phaser.js"></script>
-    <title>Com Eng Ess Group20</title>
-  </head>
-  <body>
-    <div id="gameContainer"></div>
-    <script type="module" src="scripts/main.js"></script>
-    <script type="module" src="scripts/phaser.js"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empires Ascendant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #c3e6cb, #82b3a5); /* Gradient background */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group input {
+            padding: 10px;
+            border: 2px solid #2ecc71; /* green */
+            border-radius: 5px;
+            width: 200px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .input-group button {
+            padding: 10px 20px;
+            background-color: #2ecc71; /* green */
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px; /* Added margin for button separation */
+        }
+        .input-group button:hover {
+            background-color: #27ae60; /* darker green */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Empires Ascendant</h1>
+        <h2>Welcome all mighty conquerors</h2>
+        <div class="input-group">
+            <input type="text" id="playerName" placeholder="Enter your name"><br>
+            <input type="text" id="roomNumber" placeholder="Enter room number">
+        </div>
+        <div class="input-group">
+            <button onclick="enterRoom()">Enter the room</button>
+        </div>
+        <div class="input-group">
+            <button onclick="createRoom()">Create New Room</button>
+        </div>
+        <h4> To create a new room, only player's name is required </h4>
+    </div>
+
+    <script>
+        function enterRoom() {
+            var playerName = document.getElementById('playerName').value;
+            var roomNumber = document.getElementById('roomNumber').value;
+            // Here you can add logic to enter the specified room with the provided player name and room number
+            console.log('Entering room with player name: ' + playerName + ' and room number: ' + roomNumber);
+            window.location.href = "gamepage.html"; //redirect to gamepage.html
+        }
+
+        function createRoom() {
+            var playerName = document.getElementById('playerName').value;
+            var roomNumber = document.getElementById('roomNumber').value;
+            // Here you can add logic to create a new room with the provided player name and room number
+            console.log('Creating new room with player name: ' + playerName + ' and room number: ' + roomNumber);
+        }
+    </script>
+</body>
 </html>
