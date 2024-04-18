@@ -1,54 +1,58 @@
-class Example extends Phaser.Scene
-{
-    controls;
-
-    preload ()
-    {
-        this.load.image('tiles', '../assets/tileset.png');
-        this.load.tilemapTiledJSON('map', '../assets/hexagonal.json');
-    }
-
-    create ()
-    {
-        const map = this.add.tilemap('map');
-
-        const tileset = map.addTilesetImage('tileset', 'tiles');
-
-        map.createLayer('Calque 1', tileset);
-
-        const cursors = this.input.keyboard.createCursorKeys();
-
-        this.cameras.main.setZoom(2);
-        this.cameras.main.centerOn(125, 100);
-
-        const controlConfig = {
-            camera: this.cameras.main,
-            left: cursors.left,
-            right: cursors.right,
-            up: cursors.up,
-            down: cursors.down,
-            acceleration: 0.02,
-            drag: 0.0005,
-            maxSpeed: 0.7
-        };
-
-        this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
-    }
-
-    update (time, delta)
-    {
-        this.controls.update(delta);
-    }
-}
-
 const config = {
-    type: Phaser.AUTO,
-    width: 800,
-    height: 600,
-    backgroundColor: '#2d2d2d',
-    parent: 'gameContainer',
-    pixelArt: true,
-    scene: Example
+  type: Phaser.AUTO,
+  width: 1920,
+  height: 1080,
+  parent: "gameContainer",
+  scene: {
+    preload: preload,
+    create: create,
+    update: update,
+  },
+
 };
 
 const game = new Phaser.Game(config);
+
+function preload() {}
+
+function create() {
+  /* -------- CONFIG -------- */
+  const hexRadius = 20; // Radius of each hexagon
+  
+  const lineWidth = 1
+  const fillOpacity = 1
+  const strokeColor = 0xF3D0D7
+  const fillColor = 0xFFEFEF
+  
+  const rows = 7;
+  const cols = 7;
+  /* ------------------------ */
+
+  const hexWidth = Math.sqrt(3) * hexRadius;
+  const hexHeight = 2 * hexRadius;
+
+  const xOffset = hexWidth * 1;
+  const yOffset = hexHeight * 0.75;
+
+  const points = [];
+  for (let i = 0; i < 6; i++) {
+      const angleRad = (Math.PI / 180) * (60 * i + 30);
+      points.push(hexRadius * Math.cos(angleRad));
+      points.push(hexRadius * Math.sin(angleRad));
+  }
+
+  for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+          // Calculate the **relative** position of each hexagon
+          const x = j * xOffset + hexWidth / 2 + (i % 2 === 1 ? hexWidth / 2 : 0);
+          const y = i * yOffset + hexHeight / 2;
+
+          // Draw the hexagon
+          const poly = this.add.polygon(x + hexRadius, y + hexRadius, points, fillColor, fillOpacity);
+          poly.setStrokeStyle(lineWidth, strokeColor)
+      }
+  }
+}
+
+function update() {}
+
