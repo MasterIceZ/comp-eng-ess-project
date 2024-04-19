@@ -36,9 +36,7 @@ export const handlePATCH = async (req, res) => {
       x: req.body.x,
       y: req.body.y,
     });
-
     await player.save();
-
     res.json(player);
   }
 };

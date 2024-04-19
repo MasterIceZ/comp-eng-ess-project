@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waiting Lobby</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e272e; /* Dark gray */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #34495e; /* Dark blue */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        h1 {
+            color: #c0392b; /* Red */
+            margin-bottom: 20px;
+        }
+        .players {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .player {
+            background-color: #f39c12; /* Orange */
+            color: #2c3e50; /* Dark gray */
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            margin: 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .player.empty {
+            background-color: #95a5a6; /* Gray */
+            color: #ecf0f1; /* White */
+        }
+        .start-button {
+            padding: 10px 20px;
+            background-color: #2ecc71; /* Green */
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .start-button:hover {
+            background-color: #27ae60; /* Dark green */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Waiting Lobby</h1>
+        <div class="players">
+            <div class="player">Warrior 1</div>
+            <div class="player">Warrior 2</div>
+            <div class="player empty">Waiting...</div>
+            <div class="player empty">Waiting...</div>
+        </div>
+        <button onclick="enterGame()" class="start-button">Start Game</button>
+    </div>
+    <script>
+        window.onload = function() {
+        var urlParams = new URLSearchParams(window.location.search);
+        var roomNumber = urlParams.get('room');
+        document.getElementById('roomNumber').innerText = roomNumber; // Display room number
+        // Implement logic to handle players joining the room
+        };
+
+        function enterGame() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var roomNumber = urlParams.get('room');
+            window.location.href = "gamepage.html?room=" + roomNumber;
+        } 
+    </script>
+</body>
+</html>

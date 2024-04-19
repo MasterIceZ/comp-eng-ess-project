@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #c3e6cb, #82b3a5); /* Gradient background */
+            background-color: #1a1a1a; 
             margin: 0;
             padding: 0;
             display: flex;
@@ -16,35 +16,48 @@
             height: 100vh;
         }
         .container {
-            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+            background-color: rgba(0, 0, 0, 0.8); 
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
             text-align: center;
+            color: white;
         }
         .input-group {
             margin-bottom: 20px;
         }
         .input-group input {
             padding: 10px;
-            border: 2px solid #2ecc71; /* green */
+            border: 2px solid #bdc3c7; 
             border-radius: 5px;
             width: 200px;
             font-size: 16px;
             margin-bottom: 10px;
+            background-color: #2c3e50; 
+            color: white;
         }
         .input-group button {
             padding: 10px 20px;
-            background-color: #2ecc71; /* green */
+            background-color: #3498db; 
             border: none;
             border-radius: 5px;
             color: white;
             font-size: 16px;
             cursor: pointer;
-            margin: 5px; /* Added margin for button separation */
+            margin: 5px; 
         }
         .input-group button:hover {
-            background-color: #27ae60; /* darker green */
+            background-color: #2980b9; 
+        }
+        h1 {
+            color: #e74c3c; 
+        }
+        h2 {
+            color: #f39c12; 
+            margin-bottom: 20px;
+        }
+        h4 {
+            color: #bdc3c7;
         }
     </style>
 </head>
@@ -57,29 +70,61 @@
             <input type="text" id="roomNumber" placeholder="Enter room number">
         </div>
         <div class="input-group">
-            <button onclick="enterRoom()">Enter the room</button>
+            <button onclick="enterRoom()">Enter the Room</button>
         </div>
         <div class="input-group">
             <button onclick="createRoom()">Create New Room</button>
         </div>
-        <h4> To create a new room, only player's name is required </h4>
+        <h4>To create a new room, only player's name is required</h4>
     </div>
 
     <script>
+
+        import { checkRoom } from "./handleAPI.js";
+        import { createRoom } from "./handleAPI.js";
+
         function enterRoom() {
             var playerName = document.getElementById('playerName').value;
             var roomNumber = document.getElementById('roomNumber').value;
             // Here you can add logic to enter the specified room with the provided player name and room number
-            console.log('Entering room with player name: ' + playerName + ' and room number: ' + roomNumber);
-            window.location.href = "gamepage.html"; //redirect to gamepage.html
+
+            if (checkIfExists("roomNumber", roomNumber)) {
+                console.log('Entering room with player name: ' + playerName + ' and room number: ' + roomNumber);
+                window.location.href = "waitingroom.html?room=" + roomNumber; // Redirect to waiting room page
+            } else {
+                console.log('Error entering room with player name: ' + playerName + ' and room number: ' + roomNumber);
+            }
         }
 
         function createRoom() {
             var playerName = document.getElementById('playerName').value;
-            var roomNumber = document.getElementById('roomNumber').value;
+            var roomNumber = generateUniqueRoomNumber(); // Generate a unique room number
             // Here you can add logic to create a new room with the provided player name and room number
+
+            createNewRoom(roomNumber,playerName);
+
             console.log('Creating new room with player name: ' + playerName + ' and room number: ' + roomNumber);
+            window.location.href = "waitingroom.html?room=" + roomNumber; // Redirect to waiting room with room number
         }
+
+        function generateUniqueRoomNumber() {
+            return Math.floor(10000 + Math.random() * 90000); 
+        }
+
+        async function checkIfExists(propertyName, propertyValue) {
+            const exists = await checkItem(propertyName, propertyValue);
+            return exists;
+        }
+
+        async function createNewRoom(roomNum,host) {
+            const roomData = {
+            roomNumber: roomNum,
+            players: [host],
+            };
+            const newRoom = await createRoom(roomData);
+            console.log("New room created:", newRoom);
+        }
+
     </script>
 </body>
 </html>
