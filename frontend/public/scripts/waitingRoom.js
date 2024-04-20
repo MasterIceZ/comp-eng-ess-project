@@ -32,8 +32,13 @@ document.addEventListener("DOMContentLoaded", async function () {
   }, 1000);
 });
 
-function enterGame() {
+async function enterGame() {
   const urlParams = new URLSearchParams(window.location.search);
   const roomNumber = urlParams.get("room");
-  window.location.href = "game.html?room=" + roomNumber;
+  const players = await getRoomPlayers(roomNumber);
+  if (players.length === 4) {
+    window.location.href = "game.html?room=" + roomNumber;
+  } else {
+    alert("Need 4 players to start the game");
+  }
 }
