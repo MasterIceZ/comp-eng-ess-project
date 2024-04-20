@@ -19,9 +19,16 @@ async function enterRoom() {
   const roomNumber = document.getElementById("roomNumber").value;
   // Here you can add logic to enter the specified room with the provided player name and room number
 
+  if (playerName === "" || roomNumber === "") {
+    alert("Please enter a player name and room number.");
+    return;
+  }
+
   const playerCookie = MD5(playerName + roomNumber);
 
-  if (checkIfExists("roomNumber", roomNumber)) {
+  const roomExists = await checkRoom("roomNumber", roomNumber);
+
+  if (roomExists) {
     console.log(
       "Entering room with player name: " +
         playerName +
@@ -39,6 +46,7 @@ async function enterRoom() {
         " and room number: " +
         roomNumber
     );
+    alert("Room does not exist. Please enter a valid room number.");
   }
 }
 
@@ -46,6 +54,11 @@ async function createRoom() {
   var playerName = document.getElementById("playerName").value;
   var roomNumber = generateUniqueRoomNumber(); // Generate a unique room number
   // Here you can add logic to create a new room with the provided player name and room number
+
+  if (playerName === "") {
+    alert("Please enter a player name.");
+    return;
+  }
 
   const playerCookie = MD5(playerName + roomNumber);
 
@@ -64,11 +77,6 @@ async function createRoom() {
 
 function generateUniqueRoomNumber() {
   return Math.floor(10000 + Math.random() * 90000);
-}
-
-async function checkIfExists(propertyName, propertyValue) {
-  const exists = await checkRoom(propertyName, propertyValue);
-  return exists;
 }
 
 async function createNewRoom(roomNum, host) {

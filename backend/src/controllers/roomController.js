@@ -37,7 +37,6 @@ export const handleCheckRoom = async (req, res) => {
 };
 
 export const handleCreateRoom = async (req, res) => {
-  console.log(req.body);
   try {
     const newRoom = new Room(req.body);
     await newRoom.save();
@@ -66,8 +65,6 @@ export const handleAddPlayerToRoom = async (req, res) => {
 export const handleGetPlayer = async (req, res) => {
   try {
     const { roomNumber } = req.query;
-
-    console.log(roomNumber);
 
     const room = await Room.findOne({ roomNumber: roomNumber });
     res.status(200).json(room.players);

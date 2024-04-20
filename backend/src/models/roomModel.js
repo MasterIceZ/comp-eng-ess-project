@@ -9,6 +9,10 @@ const roomSchema = new mongoose.Schema({
     maxlength: 5,
   },
   players: [{ type: String }],
+  currentTurn: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const Room = mongoose.model("Room", roomSchema);
