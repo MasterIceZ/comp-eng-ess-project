@@ -17,8 +17,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   const intervalRun = setInterval(async () => {
     const players = await getRoomPlayers(roomNumber);
 
-    console.log(players);
-
     if (players.length >= 1) {
       player_1.innerText = players[0];
     }

@@ -26,7 +26,6 @@ export async function checkRoom(propertyName, propertyValue) {
 }
 
 export async function createRoomAPI(roomData) {
-  console.log(roomData);
   try {
     const response = await fetch(`${BACKEND_URL}/room/create`, {
       method: "POST",
@@ -69,6 +68,23 @@ export async function getRoomPlayers(roomNumber) {
     return data;
   } catch (error) {
     console.error("Error getting room players:", error);
+    throw error;
+  }
+}
+
+export async function createNewPlayer(playerName, playerCookie) {
+  try {
+    const response = await fetch(`${BACKEND_URL}/player/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: playerName, cookie: playerCookie }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error creating new player:", error);
     throw error;
   }
 }
