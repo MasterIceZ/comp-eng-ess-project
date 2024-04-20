@@ -25,7 +25,7 @@ export const handlePATCH = async (req, res) => {
   }
 };
 
-export const handleCreateRoom = async (req, res) => {
+export const handleCheckRoom = async (req, res) => {
   try {
     const { propertyName, propertyValue } = req.query;
     const room = await Room.findOne({ [propertyName]: propertyValue });
@@ -36,7 +36,7 @@ export const handleCreateRoom = async (req, res) => {
   }
 };
 
-export const handleCheckRoom = async (req, res) => {
+export const handleCreateRoom = async (req, res) => {
   try {
     const newRoom = new Room(req.body);
     await newRoom.save();
