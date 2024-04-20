@@ -9,7 +9,8 @@ export class handleMap {
   static HEX_X_OFFSET = handleMap.HEX_WIDTH * 1;
   static HEX_Y_OFFSET = handleMap.HEX_HEIGHT* 0.75;
     
-  static MAP_TILES = [] //data storing maps tile (to be fetched, currently hard coded lol)
+  static MAP_TILES = [] //maps tile datas (to be fetched, currently hard coded lol)
+  static PLAYERS = [] //player datas (to be fetched, currently hard codrd lol)
 
   constructor() {
     for (let i = -3; i <= 3; ++i) {
@@ -17,11 +18,15 @@ export class handleMap {
         handleMap.MAP_TILES.push({
           x: i,
           y: j,
-          type: ((i+j) % 2 == 0 ? "tree" : "stone"),
-          owner: (i % 2 == 0 ? "spad1e" : "icy"),
+          type: ((i+j) % 2 === 0 ? "tree" : "stone"),
+          owner: (i % 2 === 0 ? "spad1e" : "icy"),
         });
       }
     }
+  }
+
+  static render(scene) {
+    this.renderMap(scene);
   }
 
   static renderMap(scene) {
@@ -47,5 +52,9 @@ export class handleMap {
       );
       poly.setStrokeStyle(handleMap.HEX_BORDER_WIDTH, handleMap.HEX_BORDER_STROKE_COLOR);
     });
+  }
+
+  static renderPlayerData(scene) {
+    
   }
 }
