@@ -1,9 +1,8 @@
-// import Room from "../../../backend/src/models/roomModel.js";
 import { BACKEND_URL } from "./config.js";
 
-export async function getPlayer() {
-  await fetch(`${BACKEND_URL}/player`).then((res) => res.json());
-}
+// export async function getPlayer() {
+//   await fetch(`${BACKEND_URL}/player`).then((res) => res.json());
+// }
 
 export async function getMap() {
   await fetch(`${BACKEND_URL}/map`).then((res) => res.json());
@@ -61,6 +60,19 @@ export async function addPlayerToRoom(roomNumber, playerName) {
     return data;
   } catch (error) {
     console.error("Error adding player to room:", error);
+    throw error;
+  }
+}
+
+export async function getRoomPlayers(roomNumber) {
+  try {
+    const response = await fetch(
+      `${BACKEND_URL}/room/player?roomNumber=${roomNumber}`
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error getting room players:", error);
     throw error;
   }
 }

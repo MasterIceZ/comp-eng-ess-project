@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import Player from "./playerModel.js";
 
 const roomSchema = new mongoose.Schema({
   roomNumber: {
@@ -9,7 +8,7 @@ const roomSchema = new mongoose.Schema({
     minlength: 5,
     maxlength: 5,
   },
-  players: [Player.schema]
+  players: [{ type: String }],
 });
 
 const Room = mongoose.model("Room", roomSchema);

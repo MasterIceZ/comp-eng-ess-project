@@ -62,3 +62,17 @@ export const handleAddPlayerToRoom = async (req, res) => {
     res.status(400).json({ message: "Error adding player to room" });
   }
 };
+
+export const handleGetPlayer = async (req, res) => {
+  try {
+    const { roomNumber } = req.query;
+
+    console.log(roomNumber);
+
+    const room = await Room.findOne({ roomNumber: roomNumber });
+    res.status(200).json(room.players);
+  } catch (error) {
+    console.error("Error getting players:", error);
+    res.status(400).json({ message: "Error getting players" });
+  }
+};
