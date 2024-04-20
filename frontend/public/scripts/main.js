@@ -3,7 +3,7 @@ import {
   createRoomAPI,
   addPlayerToRoom,
   createNewPlayer,
-} from "./handleAPI.js";
+} from "./handleApi.js";
 import { MD5 } from "./utils.js";
 
 document.addEventListener("DOMContentLoaded", function () {

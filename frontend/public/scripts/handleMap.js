@@ -9,13 +9,13 @@ export class handleMap {
   static HEX_X_OFFSET = handleMap.HEX_WIDTH * 1;
   static HEX_Y_OFFSET = handleMap.HEX_HEIGHT* 0.75;
     
-  static MAP_TILES = [] //maps tile datas (to be fetched, currently hard coded lol)
-  static PLAYERS = [] //player datas (to be fetched, currently hard codrd lol)
+  static mapTiles = [] //maps tile datas (to be fetched, currently hard coded lol)
+  static players = [] //player datas (to be fetched, currently hard codrd lol)
 
   constructor() {
     for (let i = -3; i <= 3; ++i) {
       for (let j = -3; j <= 3; ++j) {
-        handleMap.MAP_TILES.push({
+        handleMap.mapTiles.push({
           x: i,
           y: j,
           type: ((i+j) % 2 === 0 ? "tree" : "stone"),
@@ -37,7 +37,7 @@ export class handleMap {
       points.push(handleMap.HEX_RADIUS * Math.sin(angleRad));
     }
   
-    handleMap.MAP_TILES.forEach(currentTile => {
+    handleMap.mapTiles.forEach(currentTile => {
       //TODO : change color to render image
       const color = (currentTile.type == "tree" ? 0xAFE1AF : 0xD3D3D3); 
       const i = currentTile.x, j = currentTile.y;
