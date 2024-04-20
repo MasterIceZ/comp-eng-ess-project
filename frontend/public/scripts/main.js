@@ -1,4 +1,4 @@
-import { checkRoom, createRoomAPI } from "./handleAPI.js";
+import { checkRoom, createRoomAPI, addPlayerToRoom } from "./handleAPI.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   var createRoomButton = document.getElementById("createRoomButton");
@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
   enterRoomButton.addEventListener("click", enterRoom);
 });
 
-function enterRoom() {
+async function enterRoom() {
   var playerName = document.getElementById("playerName").value;
   var roomNumber = document.getElementById("roomNumber").value;
   // Here you can add logic to enter the specified room with the provided player name and room number
@@ -20,7 +20,8 @@ function enterRoom() {
         " and room number: " +
         roomNumber
     );
-    window.location.href = "waitingroom.html?room=" + roomNumber; // Redirect to waiting room page
+    await addPlayerToRoom(roomNumber, playerName);
+    window.location.href = `waitingroom.html?room=${roomNumber}`; // Redirect to waiting room page
   } else {
     console.log(
       "Error entering room with player name: " +
@@ -31,12 +32,12 @@ function enterRoom() {
   }
 }
 
-function createRoom() {
+async function createRoom() {
   var playerName = document.getElementById("playerName").value;
   var roomNumber = generateUniqueRoomNumber(); // Generate a unique room number
   // Here you can add logic to create a new room with the provided player name and room number
 
-  createNewRoom(roomNumber, playerName);
+  await createNewRoom(roomNumber, playerName);
 
   console.log(
     "Creating new room with player name: " +

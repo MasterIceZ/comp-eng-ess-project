@@ -37,6 +37,7 @@ export const handleCheckRoom = async (req, res) => {
 };
 
 export const handleCreateRoom = async (req, res) => {
+  console.log(req.body);
   try {
     const newRoom = new Room(req.body);
     await newRoom.save();
@@ -44,5 +45,20 @@ export const handleCreateRoom = async (req, res) => {
   } catch (error) {
     console.error("Error creating room:", error);
     res.status(400).json({ message: "Error creating room" });
+  }
+};
+
+export const handleAddPlayerToRoom = async (req, res) => {
+  try {
+    const { roomNumber, playerName } = req.body;
+
+    const room = await Room.findOne({ roomNumber });
+    room.players.push(playerName);
+
+    const updatedRoom = await room.save();
+    res.status(200).json(updatedRoom);
+  } catch (error) {
+    console.error("Error adding player to room:", error);
+    res.status(400).json({ message: "Error adding player to room" });
   }
 };
