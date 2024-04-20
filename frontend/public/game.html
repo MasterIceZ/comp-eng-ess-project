@@ -4,11 +4,64 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles/game.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jim Nightshade">
+
     <script src="https://cdn.jsdelivr.net/npm/phaser@v3.80.1/dist/phaser.js"></script>
-    <title>Com Eng Ess Group20</title>
+    <!--<title>Com Eng Ess Group20</title>-->
+    <title>Empires Ascendant</title>
+
   </head>
   <body>
+    
+    <div id="top-part">  
+    
+    <div id="profile1">
+    <div class="icon"><img src="/frontend/public/assets/rabbit-icon.jpeg"></div>
+    
+    <p id="name1">name1</p>
+    <p id="hp1">HP:3000</p>
+    <p id="power1">Power:300</p>
+    </div>
+
+    <div><h2 id="headText">Empires Ascendant</h2></div>
+    
+    <div id="profile2">
+      <div class="icon"><img src="/frontend/public/assets/sloth-icon.jpg"></div>
+      <p id="name2">name2</p>
+      <p id="hp2">HP:3000</p>
+      <p id="power2">Power:300</p>
+    </div>
+    
+    </div>
+  
+    
     <div id="gameContainer"></div>
+    <div id="bottom-part">
+      <div id="profile3">
+        <p id="power3">Power:300</p>
+        <p id="hp3">HP:3000</p>
+        <p id="name3">name3</p>
+        <div class="icon"><img src="/frontend/public/assets/panda-icon.jpeg"></div>
+      </div>
+      <div id="button-group">
+        <button id="walk">walk</button>
+        <button id="buy">buy</button>
+        <button id="skip">skip</button>
+        
+      </div>
+      <div id="profile4">
+        <p id="power4">Power:300</p>
+        <p id="hp4">HP:3000</p>
+        <p id="name4">name4</p>
+        <div class="icon"><img src="/frontend/public/assets/cat-icon.jpg"></div>
+      </div>
+    
+    </div>
+
+    
+  
+    
+
     <script type="module" src="scripts/main.js"></script>
     <script type="module" src="scripts/phaser.js"></script>
   </body>

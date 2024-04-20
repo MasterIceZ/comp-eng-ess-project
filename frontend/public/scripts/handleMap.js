@@ -1,7 +1,7 @@
 import { gameUtils } from "./gameUtils.js";
 
 export class handleMap {
-  static HEX_RADIUS = 50;
+  static HEX_RADIUS = 28;
   static HEX_BORDER_WIDTH = 5;
   static HEX_BORDER_STROKE_COLOR = 0x20211A;
   static HEX_WIDTH = Math.sqrt(3) * handleMap.HEX_RADIUS;
@@ -39,13 +39,13 @@ export class handleMap {
   
     handleMap.MAP_TILES.forEach(currentTile => {
       //TODO : change color to render image
-      const color = (currentTile.type == "tree" ? 0xAFE1AF : 0xD3D3D3); 
+      const color = (currentTile.type == "tree" ? 0xAFE1AF : 0xDCC486); 
       const i = currentTile.x, j = currentTile.y;
-      const x = j * handleMap.HEX_X_OFFSET + (Math.abs(i) % 2 === 1 ? handleMap.HEX_WIDTH / 2 : 0);
+      const x = j * handleMap.HEX_X_OFFSET + (Math.abs(i) % 2 === 1 ? 1 : -1) * handleMap.HEX_WIDTH / 4;
       const y = i * handleMap.HEX_Y_OFFSET;
       const poly = scene.add.polygon(
-        gameUtils.SCREEN_SIZE.w / 2 + x + handleMap.HEX_RADIUS,
-        gameUtils.SCREEN_SIZE.h / 2 + y + handleMap.HEX_RADIUS,
+        gameUtils.SCREEN_SIZE.w / 2 + handleMap.HEX_WIDTH / 2 + x,
+        gameUtils.SCREEN_SIZE.h / 2 + handleMap.HEX_HEIGHT / 2 + y,
         points,
         color,
         1 //opacity
