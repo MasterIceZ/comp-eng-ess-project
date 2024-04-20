@@ -36,6 +36,7 @@ h1 {
   margin: 10px;
   font-size: 20px;
   font-weight: bold;
+  user-select: none;
 }
 .player.empty {
   background-color: #95a5a6; /* Gray */
