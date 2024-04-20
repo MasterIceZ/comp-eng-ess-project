@@ -31,6 +31,10 @@ const playerSchema = new mongoose.Schema({
     type: Number,
     default: 1,
   },
+  cookie: {
+    type: String,
+    required: true,
+  },
 });
 
 const Player = mongoose.model("Player", playerSchema);

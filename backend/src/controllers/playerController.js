@@ -6,9 +6,10 @@ export const handleGET = async (req, res) => {
   res.json(player);
 };
 
-export const handlePOST = async (req, res) => {
+export const handleCreatePlayer = async (req, res) => {
   const player = new Player({
     name: req.body.name,
+    cookie: req.body.cookie,
   });
 
   await player.save();
@@ -36,9 +37,7 @@ export const handlePATCH = async (req, res) => {
       x: req.body.x,
       y: req.body.y,
     });
-
     await player.save();
-
     res.json(player);
   }
 };
