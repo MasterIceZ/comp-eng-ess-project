@@ -85,5 +85,4 @@ async function createNewRoom(roomNum, host) {
     players: [host],
   };
   const newRoom = await createRoomAPI(roomData);
-  console.log("New room created:", newRoom);
 }
