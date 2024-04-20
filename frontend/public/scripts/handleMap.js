@@ -1,7 +1,7 @@
 import { gameUtils } from "./gameUtils.js";
 
 export class handleMap {
-  static HEX_RADIUS = 40;
+  static HEX_RADIUS = 28;
   static HEX_BORDER_WIDTH = 5;
   static HEX_BORDER_STROKE_COLOR = 0x20211A;
   static HEX_WIDTH = Math.sqrt(3) * handleMap.HEX_RADIUS;
