@@ -1,30 +1,5 @@
 import Room from "../models/roomModel.js";
 
-export const handleGET = async (req, res) => {
-  try {
-    const rooms = await Room.find();
-    res.status(200).json(rooms);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-
-export const handlePOST = async (req, res) => {
-  const room = new Room({
-    roomNumber: req.body.roomNumber,
-    players: req.body.players
-  });
-
-  try {
-    const newRoom = await room.save();
-    res.status(201).json(newRoom);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
-
 export const handlePATCH = async (req, res) => {
   const { roomNumber } = req.params;
 
@@ -50,4 +25,24 @@ export const handlePATCH = async (req, res) => {
   }
 };
 
-//export { handleGET, handlePOST, handlePATCH };
+export const handleCreateRoom = async (req, res) => {
+  try {
+    const { propertyName, propertyValue } = req.query;
+    const room = await Room.findOne({ [propertyName]: propertyValue });
+    res.status(200).json({ exists: !!room }); // Send true if item exists, false otherwise
+  } catch (error) {
+    console.error("Error checking item:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const handleCheckRoom = async (req, res) => {
+  try {
+    const newRoom = new Room(req.body);
+    await newRoom.save();
+    res.status(201).json(newRoom); // Return the newly created room
+  } catch (error) {
+    console.error("Error creating room:", error);
+    res.status(400).json({ message: "Error creating room" });
+  }
+};
