@@ -16,7 +16,12 @@ const config = {
 
 const game = new Phaser.Game(config);
 
-function preload() {}
+function preload() {
+  this.load.image("icon0", "./assets/cat-icon.jpg");
+  this.load.image("icon1", "./assets/panda-icon.jpg");
+  this.load.image("icon2", "./assets/rabbit-icon.jpg");
+  this.load.image("icon3", "./assets/sloth-icon.jpg");
+}
 
 function create() {
   new handleGraphics();
