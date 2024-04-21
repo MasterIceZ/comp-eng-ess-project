@@ -2,7 +2,7 @@ import { gameUtils } from "./gameUtils.js";
 import { gameLogic } from "./gameLogic.js";
 
 export class handleGraphics {
-  static HEX_RADIUS = 60;
+  static HEX_RADIUS = 50;
   static HEX_BORDER_WIDTH = 4;
   static HEX_BORDER_STROKE_COLOR = 0x20211a;
   static HEX_WIDTH = Math.sqrt(3) * handleGraphics.HEX_RADIUS;
@@ -14,8 +14,8 @@ export class handleGraphics {
   static PLAYER_INFO_BORDER_WIDTH = 4;
   static PLAYER_INFO_BORDER_STROKE_COLOR = 0x20211a;
   static PLAYER_INFO_COLOR = 0xdcc486;
-  static ICON_SCALE = 0.023;
-  static ICON_RADIUS = 45;
+  static ICON_SCALE = 0.02;
+  static ICON_RADIUS = 37.5;
 
   static mapTiles = []; //maps tile datas (to be fetched, currently hard coded lol)
   static playersOnMap = []; //player datas (to be fetched, currently hard codrd lol)
@@ -35,7 +35,7 @@ export class handleGraphics {
     handleGraphics.playersOnMap.push({
       name: "spad1e",
       color: 0xfb607f,
-      id: 0,
+      id: 3,
       hp: 20,
       atk: 3,
       wood: 20,
@@ -47,7 +47,7 @@ export class handleGraphics {
     handleGraphics.playersOnMap.push({
       name: "someone",
       color: 0x421313,
-      id: 1,
+      id: 0,
       hp: 20,
       atk: 3,
       wood: 20,
@@ -59,7 +59,7 @@ export class handleGraphics {
     handleGraphics.playersOnMap.push({
       name: "icy",
       color: 0x89cff0,
-      id: 2,
+      id: 1,
       hp: 3000,
       atk: 3,
       wood: 20,
@@ -71,7 +71,7 @@ export class handleGraphics {
     handleGraphics.playersOnMap.push({
       name: "something",
       color: 0xffff00,
-      id: 3,
+      id: 2,
       hp: 20,
       atk: 3,
       wood: 20,
@@ -159,7 +159,11 @@ export class handleGraphics {
       );
       text.setOrigin(0.5, 0.5);
 
-      const icon = scene.add.image(x, y, `icon${player.id}`);
+      const icon = scene.add.image(
+        x, 
+        y - handleGraphics.PLAYER_INFO_HEIGHT / 4, 
+        `icon${player.id}`
+      );
       icon.setScale(0.025);
     }
   }
@@ -169,14 +173,14 @@ export class handleGraphics {
       player.name +
       "\n" +
       "🛡️: " +
-      player.hp +
-      "\n" +
+      player.hp + 
+      "   " +
       "⚔️: " +
       player.atk +
       "\n" +
       "🪵: " +
       player.wood +
-      "\n" +
+      "   " +
       "🪨: " +
       player.stone
     );
