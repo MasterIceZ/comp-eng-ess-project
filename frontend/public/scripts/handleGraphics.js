@@ -16,6 +16,7 @@ export class handleGraphics {
   static PLAYER_INFO_COLOR = 0xdcc486;
   static ICON_SCALE = 0.02;
   static ICON_RADIUS = 37.5;
+  static FONT_FAMILY = "Arial";
 
   static mapTiles = []; //maps tile datas (to be fetched, currently hard coded lol)
   static playersOnMap = []; //player datas (to be fetched, currently hard codrd lol)
@@ -102,10 +103,13 @@ export class handleGraphics {
           currentOwner = handleGraphics.playersOnMap[p];
       }
       const color = currentOwner.color;
-      const i = currentTile.x, j = currentTile.y;
-      let x = j * handleGraphics.HEX_X_OFFSET + (i % 2 == 0 ? 0 : handleGraphics.HEX_WIDTH / 2);
+      const i = currentTile.x,
+        j = currentTile.y;
+      let x =
+        j * handleGraphics.HEX_X_OFFSET +
+        (i % 2 == 0 ? 0 : handleGraphics.HEX_WIDTH / 2);
       let y = i * handleGraphics.HEX_Y_OFFSET;
-      x += gameUtils.SCREEN_SIZE.w / 2 + handleGraphics.HEX_WIDTH / 2; 
+      x += gameUtils.SCREEN_SIZE.w / 2 + handleGraphics.HEX_WIDTH / 2;
       y += gameUtils.SCREEN_SIZE.h / 2 + handleGraphics.HEX_HEIGHT / 2;
       const poly = scene.add.polygon(
         x,
@@ -114,7 +118,10 @@ export class handleGraphics {
         color,
         1 //opacity
       );
-      poly.setInteractive(new Phaser.Geom.Polygon(points), Phaser.Geom.Polygon.Contains);
+      poly.setInteractive(
+        new Phaser.Geom.Polygon(points),
+        Phaser.Geom.Polygon.Contains
+      );
       poly.setStrokeStyle(
         handleGraphics.HEX_BORDER_WIDTH,
         handleGraphics.HEX_BORDER_STROKE_COLOR
@@ -134,37 +141,36 @@ export class handleGraphics {
         player.id < 2
           ? handleGraphics.PLAYER_INFO_HEIGHT / 2
           : gameUtils.SCREEN_SIZE.h - handleGraphics.PLAYER_INFO_HEIGHT / 2;
-      const rect = scene.add.rectangle(
-        x,
-        y,
-        handleGraphics.PLAYER_INFO_WIDTH,
-        handleGraphics.PLAYER_INFO_HEIGHT,
-        handleGraphics.PLAYER_INFO_COLOR,
-        1
-      );
-      rect.setStrokeStyle(
-        handleGraphics.PLAYER_INFO_BORDER_WIDTH,
-        handleGraphics.PLAYER_INFO_BORDER_STROKE_COLOR
-      );
+      const rect = scene.add
+        .rectangle(
+          x,
+          y,
+          handleGraphics.PLAYER_INFO_WIDTH,
+          handleGraphics.PLAYER_INFO_HEIGHT,
+          handleGraphics.PLAYER_INFO_COLOR,
+          1
+        )
+        .setStrokeStyle(
+          handleGraphics.PLAYER_INFO_BORDER_WIDTH,
+          handleGraphics.PLAYER_INFO_BORDER_STROKE_COLOR
+        );
 
-      const text = scene.add.text(
-        x,
-        y,
-        handleGraphics.getPlayerString(player),
-        {
+      const text = scene.add
+        .text(x, y, handleGraphics.getPlayerString(player), {
           align: "center",
+          fontFamily: handleGraphics.FONT_FAMILY,
           fontSize: "24px",
           fill: "#000",
-        }
-      );
-      text.setOrigin(0.5, 0.5);
+        })
+        .setOrigin(0.5, 0.5);
 
-      const icon = scene.add.image(
-        x, 
-        y - handleGraphics.PLAYER_INFO_HEIGHT / 4, 
-        `icon${player.id}`
-      );
-      icon.setScale(0.025);
+      const graphics = scene.add.graphics();
+      graphics.fillCircle(x, y - handleGraphics.PLAYER_INFO_HEIGHT / 4, handleGraphics.ICON_RADIUS);
+
+      const icon = scene.add
+        .image(x, y - handleGraphics.PLAYER_INFO_HEIGHT / 4, `icon${player.id}`)
+        .setScale(handleGraphics.ICON_SCALE)
+        .setMask(graphics.createGeometryMask());
     }
   }
 
@@ -173,7 +179,7 @@ export class handleGraphics {
       player.name +
       "\n" +
       "🛡️: " +
-      player.hp + 
+      player.hp +
       "   " +
       "⚔️: " +
       player.atk +
@@ -189,12 +195,15 @@ export class handleGraphics {
   static renderPlayerOnBoard(scene) {
     for (let p = 0; p < 4; ++p) {
       const player = this.playersOnMap[p];
-      const i = player.x, j = player.y;
-      let x = j * handleGraphics.HEX_X_OFFSET + (i % 2 == 0 ? 0 : handleGraphics.HEX_WIDTH / 2);
+      const i = player.x,
+        j = player.y;
+      let x =
+        j * handleGraphics.HEX_X_OFFSET +
+        (i % 2 == 0 ? 0 : handleGraphics.HEX_WIDTH / 2);
       let y = i * handleGraphics.HEX_Y_OFFSET;
-      x += gameUtils.SCREEN_SIZE.w / 2; 
+      x += gameUtils.SCREEN_SIZE.w / 2;
       y += gameUtils.SCREEN_SIZE.h / 2;
-      
+
       const graphics = scene.add.graphics();
       graphics.fillCircle(x, y, handleGraphics.ICON_RADIUS);
 
