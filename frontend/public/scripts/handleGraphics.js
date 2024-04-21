@@ -10,7 +10,7 @@ export class handleGraphics {
   static HEX_X_OFFSET = handleGraphics.HEX_WIDTH * 1;
   static HEX_Y_OFFSET = handleGraphics.HEX_HEIGHT* 0.75;
   static PLAYER_INFO_WIDTH = gameUtils.SCREEN_SIZE.w / 5;
-  static PLAYER_INFO_HEIGHT = gameUtils.SCREEN_SIZE.h / 10;  
+  static PLAYER_INFO_HEIGHT = gameUtils.SCREEN_SIZE.h / 2;  
   static PLAYER_INFO_BORDER_WIDTH = 4;
   static PLAYER_INFO_BORDER_STROKE_COLOR = 0x20211A;
   static PLAYER_INFO_COLOR = 0xDCC486;
@@ -25,7 +25,7 @@ export class handleGraphics {
           x: i,
           y: j,
           type: ((i+j) % 2 === 0 ? "tree" : "stone"),
-          owner: (i % 2 === 0 ? "spad1e" : "icy"),
+          owner: (i % 2 === 0 ? "something" : "icy"),
         });
       }
     }
@@ -60,7 +60,7 @@ export class handleGraphics {
       name: "icy",
       color: 0x89cff0,
       id: 2,
-      hp: 20,
+      hp: 3000,
       atk: 3,
       wood: 20,
       stone: 20,
@@ -71,7 +71,7 @@ export class handleGraphics {
 
     handleGraphics.playersOnMap.push({
       name: "something",
-      color: 0x492010,
+      color: 0xffff00,
       id: 3,
       hp: 20,
       atk: 3,
@@ -124,16 +124,35 @@ export class handleGraphics {
   static renderPlayerData(scene) {
     for (let i = 0; i < 4; ++i) {
       const player = handleGraphics.playersOnMap[i];
+      const x = (player.id % 2 === 0 ? 0 : gameUtils.SCREEN_SIZE.w - handleGraphics.PLAYER_INFO_WIDTH);
+      const y = (player.id < 2 ? 0 : gameUtils.SCREEN_SIZE.h - handleGraphics.PLAYER_INFO_HEIGHT);
       const rect = scene.add.rectangle(
-        (player.id % 2 === 0 ? handleGraphics.PLAYER_INFO_WIDTH / 2 : gameUtils.SCREEN_SIZE.w - handleGraphics.PLAYER_INFO_WIDTH / 2), 
-        (player.id < 2 ? handleGraphics.PLAYER_INFO_HEIGHT / 2 : gameUtils.SCREEN_SIZE.h - handleGraphics.PLAYER_INFO_HEIGHT / 2),
+        x, 
+        y,
         handleGraphics.PLAYER_INFO_WIDTH,
-        handleGraphics.HEX_HEIGHT,
+        handleGraphics.PLAYER_INFO_HEIGHT,
         handleGraphics.PLAYER_INFO_COLOR,
         1,
       );
+      rect.setOrigin(0, 0)
       rect.setStrokeStyle(handleGraphics.PLAYER_INFO_BORDER_WIDTH, handleGraphics.PLAYER_INFO_BORDER_STROKE_COLOR);
       
+      const text = scene.add.text(
+        x,
+        y,
+        handleGraphics.getPlayerString(player),
+        {
+          fixedWidth: handleGraphics.PLAYER_INFO_WIDTH,
+          fixedHeight: handleGraphics.PLAYER_INFO_HEIGHT,
+          fontSize: '32px',
+          fill: '#000',
+        }
+      );
     }
   } 
+
+  static getPlayerString(player) {
+    return "name: " + player.name + "\n" + 
+           "hp: " + player.hp + "\n";   
+  }
 }
