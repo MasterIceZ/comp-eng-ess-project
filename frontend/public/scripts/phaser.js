@@ -1,5 +1,5 @@
 import { gameUtils } from "./gameUtils.js";
-import { handleMap } from "./handleMap.js";
+import { handleGraphics } from "./handleGraphics.js";
 
 const config = {
   type: Phaser.AUTO,
@@ -19,8 +19,8 @@ const game = new Phaser.Game(config);
 function preload() {}
 
 function create() {
-  new handleMap();
-  handleMap.renderMap(this);
+  new handleGraphics();
+  handleGraphics.render(this);
 }
 
 function update() {}

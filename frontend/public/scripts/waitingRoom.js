@@ -1,4 +1,4 @@
-import { getRoomPlayers } from "./handleAPI.js";
+import { getRoomPlayers } from "./handleApi.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
   const startButton = document.getElementById("startButton");
