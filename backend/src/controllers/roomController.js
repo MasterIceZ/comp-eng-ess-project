@@ -73,3 +73,31 @@ export const handleGetPlayer = async (req, res) => {
     res.status(400).json({ message: "Error getting players" });
   }
 };
+
+export const handleStartGame = async (req, res) => {
+  try {
+    const { roomNumber } = req.body;
+
+    const room = await Room.findOne({ roomNumber });
+    room.started = true;
+
+    const updatedRoom = await room.save();
+    res.status(200).json(updatedRoom);
+  } catch (error) {
+    console.error("Error starting game:", error);
+    res.status(400).json({ message: "Error starting game" });
+  }
+};
+
+export const handleIsGameStarted = async (req, res) => {
+  try {
+    const { roomNumber } = req.query;
+
+    const room = await Room.findOne({ roomNumber });
+
+    res.status(200).json(room.started);
+  } catch (error) {
+    console.error("Error checking if game started:", error);
+    res.status(400).json({ message: "Error checking if game started" });
+  }
+};

@@ -1,5 +1,6 @@
 import { gameUtils } from "./gameUtils.js";
 import { gameLogic } from "./gameLogic.js";
+import { fetchMapAndPlayerData } from "./handleApi.js";
 
 export class handleGraphics {
   static HEX_RADIUS = 50;
@@ -33,53 +34,53 @@ export class handleGraphics {
       }
     }
 
-    handleGraphics.playersOnMap.push({
-      name: "spad1e",
-      color: 0xfb607f,
-      id: 3,
-      hp: 20,
-      atk: 3,
-      wood: 20,
-      stone: 20,
-      x: 3,
-      y: 3,
-    });
+    // handleGraphics.playersOnMap.push({
+    //   name: "spad1e",
+    //   color: 0xfb607f,
+    //   id: 3,
+    //   hp: 20,
+    //   atk: 3,
+    //   wood: 20,
+    //   stone: 20,
+    //   x: 3,
+    //   y: 3,
+    // });
 
-    handleGraphics.playersOnMap.push({
-      name: "someone",
-      color: 0x421313,
-      id: 0,
-      hp: 20,
-      atk: 3,
-      wood: 20,
-      stone: 20,
-      x: -3,
-      y: -3,
-    });
+    // handleGraphics.playersOnMap.push({
+    //   name: "someone",
+    //   color: 0x421313,
+    //   id: 0,
+    //   hp: 20,
+    //   atk: 3,
+    //   wood: 20,
+    //   stone: 20,
+    //   x: -3,
+    //   y: -3,
+    // });
 
-    handleGraphics.playersOnMap.push({
-      name: "icy",
-      color: 0x89cff0,
-      id: 1,
-      hp: 3000,
-      atk: 3,
-      wood: 20,
-      stone: 20,
-      x: -3,
-      y: 3,
-    });
+    // handleGraphics.playersOnMap.push({
+    //   name: "icy",
+    //   color: 0x89cff0,
+    //   id: 1,
+    //   hp: 3000,
+    //   atk: 3,
+    //   wood: 20,
+    //   stone: 20,
+    //   x: -3,
+    //   y: 3,
+    // });
 
-    handleGraphics.playersOnMap.push({
-      name: "something",
-      color: 0xffff00,
-      id: 2,
-      hp: 20,
-      atk: 3,
-      wood: 20,
-      stone: 20,
-      x: 3,
-      y: -3,
-    });
+    // handleGraphics.playersOnMap.push({
+    //   name: "something",
+    //   color: 0xffff00,
+    //   id: 2,
+    //   hp: 20,
+    //   atk: 3,
+    //   wood: 20,
+    //   stone: 20,
+    //   x: 3,
+    //   y: -3,
+    // });
   }
 
   static render(scene) {
@@ -165,7 +166,11 @@ export class handleGraphics {
         .setOrigin(0.5, 0.5);
 
       const graphics = scene.add.graphics();
-      graphics.fillCircle(x, y - handleGraphics.PLAYER_INFO_HEIGHT / 4, handleGraphics.ICON_RADIUS);
+      graphics.fillCircle(
+        x,
+        y - handleGraphics.PLAYER_INFO_HEIGHT / 4,
+        handleGraphics.ICON_RADIUS
+      );
 
       const icon = scene.add
         .image(x, y - handleGraphics.PLAYER_INFO_HEIGHT / 4, `icon${player.id}`)
@@ -213,7 +218,13 @@ export class handleGraphics {
     }
   }
 
-  static fetchMapAndPlayerData() {
+  static async fetchMapAndPlayerData() {
     //TODO: link to backend
+    const roomNumber = new URLSearchParams(window.location.search).get("room");
+    const data = await fetchMapAndPlayerData(roomNumber).then((data) => {
+      handleGraphics.mapTiles = data.mapTiles;
+      handleGraphics.playersOnMap = data.playersOnMap;
+    });
+    console.log(data);
   }
 }

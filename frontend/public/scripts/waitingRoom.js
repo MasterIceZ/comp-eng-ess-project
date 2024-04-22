@@ -1,4 +1,4 @@
-import { getRoomPlayers } from "./handleApi.js";
+import { getRoomPlayers, startGame, isGameStarted } from "./handleApi.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
   const startButton = document.getElementById("startButton");
@@ -29,6 +29,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (players.length >= 4) {
       player_4.innerText = players[3];
     }
+    const started = await isGameStarted(roomNumber);
+    if (started === true) {
+      clearInterval(intervalRun);
+      window.location.href = "game.html?room=" + roomNumber;
+    }
   }, 1000);
 });
 
@@ -37,7 +42,8 @@ async function enterGame() {
   const roomNumber = urlParams.get("room");
   const players = await getRoomPlayers(roomNumber);
   if (players.length === 4) {
-    window.location.href = "game.html?room=" + roomNumber;
+    await startGame(roomNumber);
+    // window.location.href = "game.html?room=" + roomNumber;
   } else {
     alert("Need 4 players to start the game");
   }

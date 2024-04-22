@@ -1,7 +1,11 @@
 import Player from "../models/playerModel.js";
 
 export const handleGET = async (req, res) => {
-  const player = await Player.find();
+  const { name } = req.query;
+
+  const player = await Player.find({
+    name: { $regex: new RegExp(name, "i") },
+  });
 
   res.json(player);
 };

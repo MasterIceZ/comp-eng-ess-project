@@ -13,6 +13,10 @@ const roomSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  started: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Room = mongoose.model("Room", roomSchema);

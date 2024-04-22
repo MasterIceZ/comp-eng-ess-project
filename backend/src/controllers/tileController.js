@@ -1,7 +1,11 @@
 import Tile from "../models/tileModel.js";
 
 export const handleGET = async (req, res) => {
-  const tile = await Tile.find();
+  const { roomNumber } = req.query;
+
+  const tile = await Tile.find({
+    roomNumber,
+  });
 
   res.json(tile);
 };
