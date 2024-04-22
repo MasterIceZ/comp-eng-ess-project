@@ -1,5 +1,6 @@
 import Room from "../models/roomModel.js";
 import Tile from "../models/tileModel.js";
+import Player from "../models/playerModel.js";
 
 export const handlePATCH = async (req, res) => {
   const { roomNumber } = req.params;
@@ -91,6 +92,23 @@ export const handleStartGame = async (req, res) => {
       }
     }
     Tile.insertMany(tiles);
+
+    const player1 = await Player.findOne({ name: room.players[0] });
+    player1.x = -3;
+    player1.y = -3;
+    player1.save();
+    const player2 = await Player.findOne({ name: room.players[1] });
+    player2.x = -3;
+    player2.y = 3;
+    player2.save();
+    const player3 = await Player.findOne({ name: room.players[2] });
+    player3.x = 3;
+    player3.y = -3;
+    player3.save();
+    const player4 = await Player.findOne({ name: room.players[3] });
+    player4.x = 3;
+    player4.y = 3;
+    player4.save();
 
     res.status(200).json(updatedRoom);
   } catch (error) {
