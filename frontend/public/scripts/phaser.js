@@ -1,6 +1,9 @@
 import { gameUtils } from "./gameUtils.js";
 import { handleGraphics } from "./handleGraphics.js";
 
+let lastFetchTime = 3000;
+const fetchInterval = 3000;
+
 const config = {
   type: Phaser.AUTO,
   width: gameUtils.SCREEN_SIZE.w,
@@ -25,7 +28,13 @@ function preload() {
 
 function create() {
   new handleGraphics();
-  handleGraphics.render(this);
+  handleGraphics.fetchMapAndPlayerData();
 }
 
-function update() {}
+async function update(time, delta) {
+  lastFetchTime += delta;
+  if (lastFetchTime >= fetchInterval) {
+    handleGraphics.fetchMapAndPlayerData();
+  }
+  await handleGraphics.render(this);
+}

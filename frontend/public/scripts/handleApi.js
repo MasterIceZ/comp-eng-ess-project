@@ -102,16 +102,18 @@ export async function startGame(roomNumber) {
   }
 }
 
-export async function fetchMapAndPlayerData(roomNumber) {
-  const playerNames = await fetch(
-    `${BACKEND_URL}/room/player?roomNumber=${roomNumber}`
-  );
+export async function fetchMapAndPlayerAPI(roomNumber) {
+  const playersOnMap = [];
+  const playerNames = await getRoomPlayers(roomNumber);
   for (let i = 0; i < playerNames.length; i++) {
-    const player = await fetch(`${BACKEND_URL}/player?name=${playerNames[i]}`);
-    playersOnMap.push(player);
+    const player = await fetch(
+      `${BACKEND_URL}/player?name=${playerNames[i]}`
+    ).then((res) => res.json());
+    playersOnMap.push(player[0]);
   }
+
   const mapTiles = await fetch(
-    `${BACKEND_URL}/map?roomNumber=${roomNumber}`
+    `${BACKEND_URL}/tile?roomNumber=${roomNumber}`
   ).then((res) => res.json());
   return {
     playersOnMap,

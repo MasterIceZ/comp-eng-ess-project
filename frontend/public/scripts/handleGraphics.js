@@ -1,6 +1,6 @@
 import { gameUtils } from "./gameUtils.js";
 import { gameLogic } from "./gameLogic.js";
-import { fetchMapAndPlayerData } from "./handleApi.js";
+import { fetchMapAndPlayerAPI } from "./handleApi.js";
 
 export class handleGraphics {
   static HEX_RADIUS = 50;
@@ -19,71 +19,15 @@ export class handleGraphics {
   static ICON_RADIUS = 37.5;
   static FONT_FAMILY = "Arial";
 
+  static COLOR = [0xff0000, 0x00ff00, 0x0000ff, 0xffff00];
   static mapTiles = []; //maps tile datas (to be fetched, currently hard coded lol)
   static playersOnMap = []; //player datas (to be fetched, currently hard codrd lol)
 
   constructor() {
-    for (let i = -3; i <= 3; ++i) {
-      for (let j = -3; j <= 3; ++j) {
-        handleGraphics.mapTiles.push({
-          x: i,
-          y: j,
-          type: (i + j) % 2 === 0 ? "tree" : "stone",
-          owner: i % 2 === 0 ? "something" : "icy",
-        });
-      }
-    }
-
-    // handleGraphics.playersOnMap.push({
-    //   name: "spad1e",
-    //   color: 0xfb607f,
-    //   id: 3,
-    //   hp: 20,
-    //   atk: 3,
-    //   wood: 20,
-    //   stone: 20,
-    //   x: 3,
-    //   y: 3,
-    // });
-
-    // handleGraphics.playersOnMap.push({
-    //   name: "someone",
-    //   color: 0x421313,
-    //   id: 0,
-    //   hp: 20,
-    //   atk: 3,
-    //   wood: 20,
-    //   stone: 20,
-    //   x: -3,
-    //   y: -3,
-    // });
-
-    // handleGraphics.playersOnMap.push({
-    //   name: "icy",
-    //   color: 0x89cff0,
-    //   id: 1,
-    //   hp: 3000,
-    //   atk: 3,
-    //   wood: 20,
-    //   stone: 20,
-    //   x: -3,
-    //   y: 3,
-    // });
-
-    // handleGraphics.playersOnMap.push({
-    //   name: "something",
-    //   color: 0xffff00,
-    //   id: 2,
-    //   hp: 20,
-    //   atk: 3,
-    //   wood: 20,
-    //   stone: 20,
-    //   x: 3,
-    //   y: -3,
-    // });
+    handleGraphics.fetchMapAndPlayerData();
   }
 
-  static render(scene) {
+  static async render(scene) {
     handleGraphics.renderMap(scene);
     handleGraphics.renderPlayerData(scene);
     handleGraphics.renderPlayerOnBoard(scene);
@@ -97,13 +41,17 @@ export class handleGraphics {
       points.push(handleGraphics.HEX_RADIUS * Math.sin(angleRad));
     }
 
+    // console.log(handleGraphics.mapTiles);
+
     handleGraphics.mapTiles.forEach((currentTile) => {
       let currentOwner = null;
+      let color = null;
       for (let p = 0; p < 4; ++p) {
-        if (currentTile.owner == handleGraphics.playersOnMap[p].name)
+        if (currentTile.owner == handleGraphics.playersOnMap[p].name) {
           currentOwner = handleGraphics.playersOnMap[p];
+          color = this.COLOR[p];
+        }
       }
-      const color = currentOwner.color;
       const i = currentTile.x,
         j = currentTile.y;
       let x =
@@ -131,15 +79,18 @@ export class handleGraphics {
     });
   }
 
-  static renderPlayerData(scene) {
+  static async renderPlayerData(scene) {
+    // console.log(handleGraphics.playersOnMap);
+    await handleGraphics.fetchMapAndPlayerData();
     for (let p = 0; p < 4; ++p) {
       const player = handleGraphics.playersOnMap[p];
+      // console.log(player);
       const x =
-        player.id % 2 === 0
+        p % 2 === 0
           ? handleGraphics.PLAYER_INFO_WIDTH / 2
           : gameUtils.SCREEN_SIZE.w - handleGraphics.PLAYER_INFO_WIDTH / 2;
       const y =
-        player.id < 2
+        p < 2
           ? handleGraphics.PLAYER_INFO_HEIGHT / 2
           : gameUtils.SCREEN_SIZE.h - handleGraphics.PLAYER_INFO_HEIGHT / 2;
       const rect = scene.add
@@ -173,7 +124,7 @@ export class handleGraphics {
       );
 
       const icon = scene.add
-        .image(x, y - handleGraphics.PLAYER_INFO_HEIGHT / 4, `icon${player.id}`)
+        .image(x, y - handleGraphics.PLAYER_INFO_HEIGHT / 4, `icon${p}`)
         .setScale(handleGraphics.ICON_SCALE)
         .setMask(graphics.createGeometryMask());
     }
@@ -184,22 +135,23 @@ export class handleGraphics {
       player.name +
       "\n" +
       "🛡️: " +
-      player.hp +
+      player.health +
       "   " +
       "⚔️: " +
-      player.atk +
+      player.power +
       "\n" +
       "🪵: " +
-      player.wood +
+      player.materials.wood +
       "   " +
       "🪨: " +
-      player.stone
+      player.materials.rock
     );
   }
 
-  static renderPlayerOnBoard(scene) {
+  static async renderPlayerOnBoard(scene) {
     for (let p = 0; p < 4; ++p) {
-      const player = this.playersOnMap[p];
+      const player = handleGraphics.playersOnMap[p];
+      // console.log(player);
       const i = player.x,
         j = player.y;
       let x =
@@ -212,7 +164,7 @@ export class handleGraphics {
       const graphics = scene.add.graphics();
       graphics.fillCircle(x, y, handleGraphics.ICON_RADIUS);
 
-      const icon = scene.add.image(x, y, `icon${player.id}`);
+      const icon = scene.add.image(x, y, `icon${p}`);
       icon.setScale(handleGraphics.ICON_SCALE);
       icon.setMask(graphics.createGeometryMask());
     }
@@ -220,11 +172,12 @@ export class handleGraphics {
 
   static async fetchMapAndPlayerData() {
     //TODO: link to backend
+    // console.log("fetching map and player data");
     const roomNumber = new URLSearchParams(window.location.search).get("room");
-    const data = await fetchMapAndPlayerData(roomNumber).then((data) => {
+    const data = await fetchMapAndPlayerAPI(roomNumber).then((data) => {
       handleGraphics.mapTiles = data.mapTiles;
       handleGraphics.playersOnMap = data.playersOnMap;
     });
-    console.log(data);
+    // console.log(handleGraphics.mapTiles, handleGraphics.playersOnMap);
   }
 }

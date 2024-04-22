@@ -1,4 +1,5 @@
 import Room from "../models/roomModel.js";
+import Tile from "../models/tileModel.js";
 
 export const handlePATCH = async (req, res) => {
   const { roomNumber } = req.params;
@@ -82,6 +83,15 @@ export const handleStartGame = async (req, res) => {
     room.started = true;
 
     const updatedRoom = await room.save();
+
+    const tiles = [];
+    for (let i = -3; i <= 3; i++) {
+      for (let j = -3; j <= 3; j++) {
+        tiles.push(new Tile({ x: i, y: j, roomNumber }));
+      }
+    }
+    Tile.insertMany(tiles);
+
     res.status(200).json(updatedRoom);
   } catch (error) {
     console.error("Error starting game:", error);

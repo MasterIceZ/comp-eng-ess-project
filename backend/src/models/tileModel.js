@@ -31,6 +31,9 @@ const tileSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+  roomNumber: {
+    type: String,
+  },
 });
 
 const Tile = mongoose.model("Tile", tileSchema);

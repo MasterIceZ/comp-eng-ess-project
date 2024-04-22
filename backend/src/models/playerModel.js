@@ -14,10 +14,14 @@ const playerSchema = new mongoose.Schema({
       type: Number,
       default: 0,
     },
-    metal: {
-      type: Number,
-      default: 0,
-    },
+  },
+  x: {
+    type: Number,
+    default: 0,
+  },
+  y: {
+    type: Number,
+    default: 0,
   },
   health: {
     type: Number,
