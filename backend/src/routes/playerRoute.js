@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.get("/", playerController.handleGET);
 router.post("/create", playerController.handleCreatePlayer);
-router.patch("/", playerController.handlePATCH);
+router.post("/move", playerController.handleMovePlayer);
 
 export default router;

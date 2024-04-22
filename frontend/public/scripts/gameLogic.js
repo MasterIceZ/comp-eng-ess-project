@@ -1,5 +1,7 @@
+import { handleMovePlayer } from "./handleApi.js";
+
 export class gameLogic {
-  static handleClick(currentTile) {
-    console.log(currentTile.x, currentTile.y);
+  static async handleClick(currentTile) {
+    await handleMovePlayer(currentTile);
   }
 }

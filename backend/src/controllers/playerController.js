@@ -1,4 +1,5 @@
 import Player from "../models/playerModel.js";
+import Room from "../models/roomModel.js";
 
 export const handleGET = async (req, res) => {
   const { name } = req.query;
@@ -21,27 +22,30 @@ export const handleCreatePlayer = async (req, res) => {
   res.json(player);
 };
 
-export const handlePATCH = async (req, res) => {
-  if (req.body.type === "attack") {
-    const attacker = await Player.findOne({ name: req.body.attacker });
-    const defender = await Player.findOne({ name: req.body.defender });
+export const handleMovePlayer = async (req, res) => {
+  console.log(req.body);
+  const { cookie, x, y, roomNumber } = req.body;
 
-    if (attacker.power > defender.power) {
-      defender.health -= attacker.power - defender.power;
+  const player = await Player.findOne({ cookie });
+  const room = await Room.findOne({ roomNumber });
+  const currentTurnPlayer = room.players[room.currentTurn];
 
-      res.send("Attack successful");
-    } else {
-      attacker.health -= defender.power - attacker.power;
+  console.log(player.name, currentTurnPlayer, currentTurnPlayer == player.name);
 
-      res.send("Attack failed");
+  if (player.name == currentTurnPlayer) {
+    if (Math.abs(player.x - x) > 1 || Math.abs(player.y - y) > 1) {
+      res.status(200).json({ message: "Invalid move" });
+      return;
     }
-  } else if (req.body.type === "capture") {
-    const player = await Player.findOne({ name: req.body.name });
-    player.tiles.push({
-      x: req.body.x,
-      y: req.body.y,
-    });
+    player.x = x;
+    player.y = y;
     await player.save();
-    res.json(player);
+
+    room.currentTurn = (room.currentTurn + 1) % 4;
+    await room.save();
+
+    res.status(200).json({ player, room });
+  } else {
+    res.status(200).json({ message: "Not your turn" });
   }
 };

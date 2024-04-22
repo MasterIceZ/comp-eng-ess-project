@@ -1,4 +1,5 @@
 import { BACKEND_URL } from "./config.js";
+import { getCookie } from "./utils.js";
 
 export async function getMap() {
   await fetch(`${BACKEND_URL}/map`).then((res) => res.json());
@@ -130,6 +131,28 @@ export async function isGameStarted(roomNumber) {
     return data;
   } catch (error) {
     console.error("Error checking if game started:", error);
+    throw error;
+  }
+}
+
+export async function handleMovePlayer(currentTile) {
+  try {
+    const response = await fetch(`${BACKEND_URL}/player/move`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        cookie: getCookie("playerCookie"),
+        x: currentTile.x,
+        y: currentTile.y,
+        roomNumber: currentTile.roomNumber,
+      }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error moving player:", error);
     throw error;
   }
 }
