@@ -156,3 +156,23 @@ export async function handleMovePlayer(currentTile) {
     throw error;
   }
 }
+
+export async function removePlayerFromRoom(roomNumber) {
+  try {
+    const response = await fetch(`${BACKEND_URL}/room/player`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        roomNumber,
+        cookie: getCookie("playerCookie"),
+      }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error removing player from room:", error);
+    throw error;
+  }
+}

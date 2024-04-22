@@ -129,3 +129,31 @@ export const handleIsGameStarted = async (req, res) => {
     res.status(400).json({ message: "Error checking if game started" });
   }
 };
+
+export const handleDeletePlayer = async (req, res) => {
+  try {
+    const { roomNumber, cookie } = req.body;
+
+    const room = await Room.findOne({ roomNumber });
+    const player = await Player.findOne({ cookie });
+    const index = room.players.indexOf(player.name);
+
+    await Player.deleteOne({ cookie });
+
+    if (index > -1) {
+      room.players.splice(index, 1);
+    }
+
+    await room.save();
+
+    if (room.players.length === 0) {
+      await Room.deleteOne({ roomNumber });
+      await Tile.deleteMany({ roomNumber });
+    }
+
+    res.status(200).json(room);
+  } catch (error) {
+    console.error("Error deleting player:", error);
+    res.status(400).json({ message: "Error deleting player" });
+  }
+};

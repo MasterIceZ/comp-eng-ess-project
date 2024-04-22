@@ -9,6 +9,7 @@ router.get("/check", roomController.handleCheckRoom);
 router.post("/create", roomController.handleCreateRoom);
 router.post("/addPlayer", roomController.handleAddPlayerToRoom);
 router.get("/player", roomController.handleGetPlayer);
+router.delete("/player", roomController.handleDeletePlayer);
 router.post("/startGame", roomController.handleStartGame);
 router.get("/isGameStarted", roomController.handleIsGameStarted);
 

@@ -1,43 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="styles/waitingroom.css" />
-  <title>Waiting Lobby</title>
-  <style>
-    .back-button {
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Waiting Lobby</h1>
-    <h2>#<span id="roomNumberSpan"></span></h2>
-    <div class="players">
-      <div id="player-1" class="player"></div>
-      <div id="player-2" class="player"></div>
-      <div id="player-3" class="player"></div>
-      <div id="player-4" class="player"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles/waitingroom.css" />
+    <title>Waiting Lobby</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Waiting Lobby</h1>
+      <h2>#<span id="roomNumberSpan"></span></h2>
+      <div class="players">
+        <div id="player-1" class="player"></div>
+        <div id="player-2" class="player"></div>
+        <div id="player-3" class="player"></div>
+        <div id="player-4" class="player"></div>
+      </div>
+      <button id="startButton" class="start-button">Start Game</button>
+      <button id="backButton" class="back-button">Back</button>
     </div>
-    <button id="startButton" class="start-button">Start Game</button>
-    <button id="backButton" class="back-button">Back</button>
-  </div>
-  <script type="module" src="scripts/waitingRoom.js"></script>
-  <script>
-    document.getElementById("backButton").addEventListener("click", function() {
-      window.location.href = "index.html";
-      alert("You've left the Room");
-    });
-  </script>
-</body>
+    <script type="module" src="scripts/waitingRoom.js"></script>
+  </body>
 </html>
