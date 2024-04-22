@@ -3,6 +3,7 @@ import cors from "cors";
 
 import Player from "./routes/playerRoute.js";
 import Tile from "./routes/tileRoute.js";
+import Room from "./routes/roomRoute.js";
 
 const app = express();
 
@@ -20,5 +21,6 @@ app.use(cors());
 // routes
 app.use("/player", Player);
 app.use("/tile", Tile);
+app.use("/room", Room);
 
 export default app;

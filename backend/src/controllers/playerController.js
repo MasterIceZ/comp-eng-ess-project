@@ -1,14 +1,19 @@
 import Player from "../models/playerModel.js";
 
 export const handleGET = async (req, res) => {
-  const player = await Player.find();
+  const { name } = req.query;
+
+  const player = await Player.find({
+    name: { $regex: new RegExp(name, "i") },
+  });
 
   res.json(player);
 };
 
-export const handlePOST = async (req, res) => {
+export const handleCreatePlayer = async (req, res) => {
   const player = new Player({
     name: req.body.name,
+    cookie: req.body.cookie,
   });
 
   await player.save();
@@ -36,9 +41,7 @@ export const handlePATCH = async (req, res) => {
       x: req.body.x,
       y: req.body.y,
     });
-
     await player.save();
-
     res.json(player);
   }
 };
