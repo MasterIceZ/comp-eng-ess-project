@@ -1,4 +1,9 @@
-import { getRoomPlayers, startGame, isGameStarted } from "./handleApi.js";
+import {
+  getRoomPlayers,
+  startGame,
+  isGameStarted,
+  removePlayerFromRoom,
+} from "./handleApi.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
   const startButton = document.getElementById("startButton");
@@ -8,6 +13,13 @@ document.addEventListener("DOMContentLoaded", async function () {
   const roomNumber = urlParams.get("room");
   document.getElementById("roomNumberSpan").innerText = roomNumber; // Display room number
   // Implement logic to handle players joining the room
+
+  document
+    .getElementById("backButton")
+    .addEventListener("click", async function () {
+      await removePlayerFromRoom(roomNumber);
+      window.location.href = "index.html";
+    });
 
   const player_1 = document.getElementById("player-1");
   const player_2 = document.getElementById("player-2");
