@@ -12,5 +12,6 @@ router.get("/player", roomController.handleGetPlayer);
 router.delete("/player", roomController.handleDeletePlayer);
 router.post("/startGame", roomController.handleStartGame);
 router.get("/isGameStarted", roomController.handleIsGameStarted);
+router.get("/currentTurn", roomController.handleCurrentTurn);
 
 export default router;

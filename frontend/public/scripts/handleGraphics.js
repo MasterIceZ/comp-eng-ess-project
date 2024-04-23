@@ -24,17 +24,63 @@ export class handleGraphics {
 
   static playersOnMap = [];
   static bombs = [];
-  static current_turn = 1;
+  static currentTurn = 1;
 
   static async render(scene) {
     await handleGraphics.fetchPlayerData();
+    scene.children.removeAll(true);
+    handleGraphics.renderBoard(scene);
     handleGraphics.renderPlayerData(scene);
     handleGraphics.renderPlayerOnBoard(scene);
     handleGraphics.renderBomb(scene);
     handleGraphics.renderPlayerTurn(scene);
   }
 
-  static renderPlayerData(scene) {
+  static async renderBoard(scene) {
+    const points = [];
+    for (let i = 0; i < 6; i++) {
+      const angleRad = (Math.PI / 180) * (60 * i + 30);
+      points.push(handleGraphics.HEX_RADIUS * Math.cos(angleRad));
+      points.push(handleGraphics.HEX_RADIUS * Math.sin(angleRad));
+    }
+
+    for (let i = -3; i <= 3; ++i) {
+      for (let j = -3; j <= 3; ++j) {
+        let color = handleGraphics.BOARD_COLOR;
+        let x =
+          j * handleGraphics.HEX_X_OFFSET +
+          (i % 2 == 0 ? 0 : handleGraphics.HEX_WIDTH / 2);
+        let y = i * handleGraphics.HEX_Y_OFFSET;
+        x += gameUtils.SCREEN_SIZE.w / 2 + handleGraphics.HEX_WIDTH / 2;
+        y += gameUtils.SCREEN_SIZE.h / 2 + handleGraphics.HEX_HEIGHT / 2;
+        const poly = scene.add.polygon(
+          x,
+          y,
+          points,
+          color,
+          1 //opacity
+        );
+        poly.setInteractive(
+          new Phaser.Geom.Polygon(points),
+          Phaser.Geom.Polygon.Contains
+        );
+        poly.setStrokeStyle(
+          handleGraphics.HEX_BORDER_WIDTH,
+          handleGraphics.HEX_BORDER_STROKE_COLOR
+        );
+        poly.on("pointerdown", async () => {
+          await handleMovePlayer(
+            i,
+            j,
+            new URLSearchParams(window.location.search).get("room")
+          );
+          console.log(i, j);
+        });
+      }
+    }
+  }
+
+  static async renderPlayerData(scene) {
     // console.log(handleGraphics.playersOnMap);
     for (let p = 0; p < 4; ++p) {
       const player = handleGraphics.playersOnMap[p];
@@ -90,8 +136,8 @@ export class handleGraphics {
     return player.name + "\n" + "❤️: " + player.health;
   }
 
-  static renderBomb(scene) {
-    for (let  b= 0; b < this.bombs.length; ++b) {
+  static async renderBomb(scene) {
+    for (let b = 0; b < this.bombs.length; ++b) {
       const bomb = handleGraphics.bombs[b];
       const i = bomb.x,
         j = bomb.y;
@@ -103,24 +149,31 @@ export class handleGraphics {
       y += gameUtils.SCREEN_SIZE.h / 2;
 
       const text = scene.add
-      .text(x, y, "💣", {
-        align: "center",
-        fontFamily: handleGraphics.FONT_FAMILY,
-        fontSize: "32px",
-        fill: "#000",
-      })
-      .setOrigin(0.5, 0.5);
+        .text(x, y, "💣", {
+          align: "center",
+          fontFamily: handleGraphics.FONT_FAMILY,
+          fontSize: "32px",
+          fill: "#000",
+        })
+        .setOrigin(0.5, 0.5);
     }
   }
 
-  static renderPlayerTurn(scene) {
-      const text = scene.add
-      .text(gameUtils.SCREEN_SIZE.w/2, gameUtils.SCREEN_SIZE.h*0.95, `${handleGraphics.playersOnMap[handleGraphics.current_turn].name}'s turn to move`, {
-        align: "center",
-        // fontFamily: handleGraphics.TITLE_FONT_FAMILY,
-        fontSize: "32px",
-        fill: "#ff0000",
-      })
+  static async renderPlayerTurn(scene) {
+    const text = scene.add
+      .text(
+        gameUtils.SCREEN_SIZE.w / 2,
+        gameUtils.SCREEN_SIZE.h * 0.95,
+        `${
+          handleGraphics.playersOnMap[handleGraphics.currentTurn].name
+        }'s turn to move`,
+        {
+          align: "center",
+          // fontFamily: handleGraphics.TITLE_FONT_FAMILY,
+          fontSize: "32px",
+          fill: "#ff0000",
+        }
+      )
       .setOrigin(0.5, 1);
   }
 
@@ -155,6 +208,7 @@ export class handleGraphics {
     const data = await fetchPlayerAPI(roomNumber).then((data) => {
       handleGraphics.playersOnMap = data.playersOnMap;
       handleGraphics.bombs = data.bombs;
+      handleGraphics.currentTurn = data.currentTurn;
     });
   }
 }

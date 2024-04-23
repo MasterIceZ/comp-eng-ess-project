@@ -152,3 +152,15 @@ export const handleDeletePlayer = async (req, res) => {
     res.status(400).json({ message: "Error deleting player" });
   }
 };
+
+export const handleCurrentTurn = async (req, res) => {
+  try {
+    const { roomNumber } = req.query;
+
+    const room = await Room.findOne({roomNumber: roomNumber});
+    res.status(200).json(room.currentTurn);
+  } catch (error) {
+    console.error("Error checking if game started:", error);
+    res.status(400).json({ message: "Error checking if game started" });
+  }
+}

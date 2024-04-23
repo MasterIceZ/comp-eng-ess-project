@@ -104,6 +104,10 @@ export async function startGame(roomNumber) {
 }
 
 export async function fetchPlayerAPI(roomNumber) {
+  const currentTurn = await fetch(
+    `${BACKEND_URL}/room/currentTurn?roomNumber=${roomNumber}`
+  ).then((res) => res.json());
+
   const playersOnMap = [];
   const playerNames = await getRoomPlayers(roomNumber);
   for (let i = 0; i < playerNames.length; i++) {
@@ -119,6 +123,7 @@ export async function fetchPlayerAPI(roomNumber) {
   return {
     playersOnMap,
     bombs,
+    currentTurn,
   };
 }
 
