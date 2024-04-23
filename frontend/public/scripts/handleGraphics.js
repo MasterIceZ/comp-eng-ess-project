@@ -169,7 +169,7 @@ export class handleGraphics {
         }'s turn to move`,
         {
           align: "center",
-          // fontFamily: handleGraphics.TITLE_FONT_FAMILY,
+          fontFamily: handleGraphics.TITLE_FONT_FAMILY,
           fontSize: "32px",
           fill: "#ff0000",
         }
@@ -178,7 +178,19 @@ export class handleGraphics {
   }
 
   static renderTitle(scene) {
-    //TODO
+    const text = scene.add
+      .text(
+        gameUtils.SCREEN_SIZE.w / 2,
+        gameUtils.SCREEN_SIZE.h * 0.05,
+        "Blast 💥",
+        {
+          align: "center",
+          fontFamily: handleGraphics.TITLE_FONT_FAMILY,
+          fontSize: "32px",
+          fill: "#ff0000",
+        }
+      )
+      .setOrigin(0.5, 0);
   }
 
   static async renderPlayerOnBoard(scene) {
