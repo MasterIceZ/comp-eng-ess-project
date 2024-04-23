@@ -5,16 +5,6 @@ const playerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  materials: {
-    wood: {
-      type: Number,
-      default: 0,
-    },
-    rock: {
-      type: Number,
-      default: 0,
-    },
-  },
   x: {
     type: Number,
     default: 0,
@@ -25,11 +15,7 @@ const playerSchema = new mongoose.Schema({
   },
   health: {
     type: Number,
-    default: 20,
-  },
-  tiles: {
-    type: Array,
-    default: [],
+    default: 5,
   },
   power: {
     type: Number,

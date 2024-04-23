@@ -1,6 +1,7 @@
 import Room from "../models/roomModel.js";
-import Tile from "../models/tileModel.js";
+import Bomb from "../models/bombModel.js";
 import Player from "../models/playerModel.js";
+import { handleCreateBomb } from "./bombController.js";
 
 export const handlePATCH = async (req, res) => {
   const { roomNumber } = req.params;
@@ -85,30 +86,24 @@ export const handleStartGame = async (req, res) => {
 
     const updatedRoom = await room.save();
 
-    const tiles = [];
-    for (let i = -3; i <= 3; i++) {
-      for (let j = -3; j <= 3; j++) {
-        tiles.push(new Tile({ x: i, y: j, roomNumber }));
-      }
-    }
-    Tile.insertMany(tiles);
-
     const player1 = await Player.findOne({ name: room.players[0] });
     player1.x = -3;
     player1.y = -3;
-    player1.save();
+    await player1.save();
     const player2 = await Player.findOne({ name: room.players[1] });
     player2.x = -3;
     player2.y = 3;
-    player2.save();
+    await player2.save();
     const player3 = await Player.findOne({ name: room.players[2] });
     player3.x = 3;
     player3.y = -3;
-    player3.save();
+    await player3.save();
     const player4 = await Player.findOne({ name: room.players[3] });
     player4.x = 3;
     player4.y = 3;
-    player4.save();
+    await player4.save();
+
+    for (let i = 0; i < 5; ++i) await handleCreateBomb(roomNumber);
 
     res.status(200).json(updatedRoom);
   } catch (error) {
@@ -148,7 +143,7 @@ export const handleDeletePlayer = async (req, res) => {
 
     if (room.players.length === 0) {
       await Room.deleteOne({ roomNumber });
-      await Tile.deleteMany({ roomNumber });
+      await Bomb.deleteMany({ roomNumber });
     }
 
     res.status(200).json(room);

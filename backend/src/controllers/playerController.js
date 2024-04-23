@@ -1,5 +1,7 @@
 import Player from "../models/playerModel.js";
 import Room from "../models/roomModel.js";
+import Bomb from "../models/bombModel.js";
+import { handleCreateBomb } from "../controllers/bombController.js";
 
 export const handleGET = async (req, res) => {
   const { name } = req.query;
@@ -32,16 +34,65 @@ export const handleMovePlayer = async (req, res) => {
 
   console.log(player.name, currentTurnPlayer, currentTurnPlayer == player.name);
 
-  if (player.name == currentTurnPlayer) {
-    if (Math.abs(player.x - x) > 1 || Math.abs(player.y - y) > 1) {
+  const movable = (player, x, y, dis) => {
+    return !(
+      (player.x === x && player.y === y) ||
+      Math.abs(player.x - x) > dis ||
+      (player.x === x && Math.abs(player.y - y) > dis) ||
+      (player.x !== x &&
+        player.x % 2 === 0 &&
+        (Math.abs(player.y - y) > dis || player.y + dis === y)) ||
+      (player.x !== x &&
+        Math.abs(player.x % 2) === 1 &&
+        (Math.abs(player.y - y) > dis || player.y - dis === y))
+    );
+  };
+
+  if (player.name === currentTurnPlayer) {
+    if (!movable(player, x, y, 1)) {
+      console.log("Invalid move");
       res.status(200).json({ message: "Invalid move" });
       return;
     }
+
+    const bomb = await Bomb.findOne({ x: x, y: y, roomNumber: roomNumber });
+    let playerAlive = [], countPlayerAlive = 0;
+    const playerInRoom = room.players;
+    for (let p = 0; p < 4; ++p) {
+      const currentPlayer = await Player.findOne({ name: playerInRoom[p] });
+      if (
+        playerInRoom[p] != player.name &&
+        movable(currentPlayer, x, y, 2)
+      ) {
+        if (bomb) {
+          currentPlayer.health = Math.max(0, currentPlayer.health-1);
+          await currentPlayer.save();
+          await Bomb.deleteOne({ x: x, y: y, roomNumber: roomNumber });
+          await handleCreateBomb(roomNumber);
+        }
+          if (currentPlayer.health > 0) countPlayerAlive++, playerAlive.push(1);
+        else playerAlive.push(0);
+      }
+    }
+
     player.x = x;
     player.y = y;
     await player.save();
 
-    room.currentTurn = (room.currentTurn + 1) % 4;
+    if (countPlayerAlive == 1) {
+      for (let p = 0; p < 4; ++p) {
+        if (playerAlive[p]) {
+          alert(`${room.players[p]} wins`);
+          window.location.href = "";
+        }
+      }
+      return;
+    }
+
+    for (let i = 0; i < 4; ++i) {
+      room.currentTurn = (room.currentTurn + 1) % 4;
+      if (playerAlive[room.currentTurn]) break;
+    }
     await room.save();
 
     res.status(200).json({ player, room });
