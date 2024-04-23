@@ -4,5 +4,4 @@ export class gameUtils {
     w: window.innerWidth,
     h: window.innerHeight,
   };
-  
 }

@@ -27,7 +27,7 @@ export const handleCreateBomb = async (roomNumber) => {
     let x = Math.floor(Math.random() * 7) - 3;
     let y = Math.floor(Math.random() * 7) - 3;
     const search = await Bomb.findOne({ x: x, y: y, roomNumber: roomNumber });
-    const player = await Player.findOne({ x: x, y: y});
+    const player = await Player.findOne({ x: x, y: y });
     if (search || player) continue;
     const bomb = new Bomb({ x: x, y: y, roomNumber: roomNumber });
     await bomb.save();
