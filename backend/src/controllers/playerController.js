@@ -60,7 +60,7 @@ export const handleMovePlayer = async (req, res) => {
     const playerInRoom = room.players;
     for (let p = 0; p < 4; ++p) {
       const currentPlayer = await Player.findOne({ name: playerInRoom[p] });
-      if (playerInRoom[p] !== currentPlayer.name && bomb && movable(currentPlayer, x, y, 1)) {
+      if (playerInRoom[p] !== player.name && bomb && movable(currentPlayer, x, y, 2)) {
           currentPlayer.health = Math.max(0, currentPlayer.health-1);
           await currentPlayer.save();
       }

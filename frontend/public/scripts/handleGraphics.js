@@ -210,5 +210,13 @@ export class handleGraphics {
       handleGraphics.bombs = data.bombs;
       handleGraphics.currentTurn = data.currentTurn;
     });
+
+    console.log(handleGraphics.playersOnMap);
+    for (let p = 0; p < 4; ++p) {
+      if (handleGraphics.playersOnMap[p].win === true) {
+        alert(`${handleGraphics.playersOnMap[p].name} is the winner`);
+        window.location.href = "index.html";
+      }
+    }
   }
 }
