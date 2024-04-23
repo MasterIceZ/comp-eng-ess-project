@@ -1,8 +1,8 @@
 import { gameUtils } from "./gameUtils.js";
 import { handleGraphics } from "./handleGraphics.js";
 
-let lastFetchTime = 3000;
-const fetchInterval = 3000;
+let lastFetchTime = 0;
+const fetchInterval = 1000;
 
 const config = {
   type: Phaser.AUTO,

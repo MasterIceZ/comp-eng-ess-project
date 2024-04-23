@@ -70,6 +70,7 @@ export class handleGraphics {
             j,
             new URLSearchParams(window.location.search).get("room")
           );
+          console.log(i, j);
         });
       }
     }
@@ -143,12 +144,14 @@ export class handleGraphics {
       x += gameUtils.SCREEN_SIZE.w / 2;
       y += gameUtils.SCREEN_SIZE.h / 2;
 
-      const graphics = scene.add.graphics();
-      graphics.fillCircle(x, y, handleGraphics.ICON_RADIUS);
-
-      const icon = scene.add.image(x, y, `icon${p}`);
-      icon.setScale(handleGraphics.ICON_SCALE);
-      icon.setMask(graphics.createGeometryMask());
+      const text = scene.add
+      .text(x, y, "💣", {
+        align: "center",
+        fontFamily: handleGraphics.FONT_FAMILY,
+        fontSize: "32px",
+        fill: "#000",
+      })
+      .setOrigin(0.5, 0.5);
     }
   }
 
