@@ -25,6 +25,10 @@ const playerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  win: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Player = mongoose.model("Player", playerSchema);

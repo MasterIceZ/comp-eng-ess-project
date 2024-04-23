@@ -79,11 +79,14 @@ export const handleMovePlayer = async (req, res) => {
     if (countPlayerAlive == 1) {
       for (let p = 0; p < 4; ++p) {
         if (playerAlive[p]) {
-          alert(`${room.players[p]} wins`);
-          window.location.href = "";
+          const winner = await Player.findOne({ name: playerInRoom[p] });
+          winner.win = true;
+          await winner.save();
         }
       }
-      return;
+      room.players = [];
+      room.currentTurn = -1;
+      await room.save();
     }
 
     for (let i = 0; i < 4; ++i) {
