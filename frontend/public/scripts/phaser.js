@@ -26,15 +26,13 @@ function preload() {
   this.load.image("icon3", "./assets/sloth-icon.jpg");
 }
 
-function create() {
-  new handleGraphics();
-  handleGraphics.fetchMapAndPlayerData();
+async function create() {
+  await handleGraphics.render(this);
 }
 
 async function update(time, delta) {
   lastFetchTime += delta;
   if (lastFetchTime >= fetchInterval) {
-    handleGraphics.fetchMapAndPlayerData();
+    await handleGraphics.render(this);
   }
-  await handleGraphics.render(this);
 }

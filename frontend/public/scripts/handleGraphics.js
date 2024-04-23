@@ -1,6 +1,6 @@
 import { gameUtils } from "./gameUtils.js";
-import { gameLogic } from "./gameLogic.js";
-import { fetchMapAndPlayerAPI } from "./handleApi.js";
+import { fetchPlayerAPI } from "./handleApi.js";
+import { handleMovePlayer } from "./handleApi.js";
 
 export class handleGraphics {
   static HEX_RADIUS = 50;
@@ -15,22 +15,21 @@ export class handleGraphics {
   static PLAYER_INFO_BORDER_WIDTH = 4;
   static PLAYER_INFO_BORDER_STROKE_COLOR = 0x20211a;
   static PLAYER_INFO_COLOR = 0xdcc486;
+  static PLAYER_DEAD_INFO_COLOR = 0x808080;
   static ICON_SCALE = 0.02;
   static ICON_RADIUS = 37.5;
   static FONT_FAMILY = "Arial";
+  static BOARD_COLOR = 0xfff9e3;
 
-  static COLOR = [0xff0000, 0x00ff00, 0x0000ff, 0xffff00];
-  static mapTiles = []; //maps tile datas (to be fetched, currently hard coded lol)
-  static playersOnMap = []; //player datas (to be fetched, currently hard codrd lol)
-
-  constructor() {
-    handleGraphics.fetchMapAndPlayerData();
-  }
+  static playersOnMap = [];
+  static bombs = [];
 
   static async render(scene) {
+    await handleGraphics.fetchPlayerData();
     handleGraphics.renderMap(scene);
     handleGraphics.renderPlayerData(scene);
     handleGraphics.renderPlayerOnBoard(scene);
+    handleGraphics.renderBomb(scene);
   }
 
   static renderMap(scene) {
@@ -41,47 +40,43 @@ export class handleGraphics {
       points.push(handleGraphics.HEX_RADIUS * Math.sin(angleRad));
     }
 
-    // console.log(handleGraphics.mapTiles);
-
-    handleGraphics.mapTiles.forEach((currentTile) => {
-      let currentOwner = null;
-      let color = null;
-      for (let p = 0; p < 4; ++p) {
-        if (currentTile.owner == handleGraphics.playersOnMap[p].name) {
-          currentOwner = handleGraphics.playersOnMap[p];
-          color = this.COLOR[p];
-        }
+    for (let i = -3; i <= 3; ++i) {
+      for (let j = -3; j <= 3; ++j) {
+        let color = handleGraphics.BOARD_COLOR;
+        let x =
+          j * handleGraphics.HEX_X_OFFSET +
+          (i % 2 == 0 ? 0 : handleGraphics.HEX_WIDTH / 2);
+        let y = i * handleGraphics.HEX_Y_OFFSET;
+        x += gameUtils.SCREEN_SIZE.w / 2 + handleGraphics.HEX_WIDTH / 2;
+        y += gameUtils.SCREEN_SIZE.h / 2 + handleGraphics.HEX_HEIGHT / 2;
+        const poly = scene.add.polygon(
+          x,
+          y,
+          points,
+          color,
+          1 //opacity
+        );
+        poly.setInteractive(
+          new Phaser.Geom.Polygon(points),
+          Phaser.Geom.Polygon.Contains
+        );
+        poly.setStrokeStyle(
+          handleGraphics.HEX_BORDER_WIDTH,
+          handleGraphics.HEX_BORDER_STROKE_COLOR
+        );
+        poly.on("pointerdown", async () => {
+          await handleMovePlayer(
+            i,
+            j,
+            new URLSearchParams(window.location.search).get("room")
+          );
+        });
       }
-      const i = currentTile.x,
-        j = currentTile.y;
-      let x =
-        j * handleGraphics.HEX_X_OFFSET +
-        (i % 2 == 0 ? 0 : handleGraphics.HEX_WIDTH / 2);
-      let y = i * handleGraphics.HEX_Y_OFFSET;
-      x += gameUtils.SCREEN_SIZE.w / 2 + handleGraphics.HEX_WIDTH / 2;
-      y += gameUtils.SCREEN_SIZE.h / 2 + handleGraphics.HEX_HEIGHT / 2;
-      const poly = scene.add.polygon(
-        x,
-        y,
-        points,
-        color,
-        1 //opacity
-      );
-      poly.setInteractive(
-        new Phaser.Geom.Polygon(points),
-        Phaser.Geom.Polygon.Contains
-      );
-      poly.setStrokeStyle(
-        handleGraphics.HEX_BORDER_WIDTH,
-        handleGraphics.HEX_BORDER_STROKE_COLOR
-      );
-      poly.on("pointerdown", () => gameLogic.handleClick(currentTile));
-    });
+    }
   }
 
-  static async renderPlayerData(scene) {
+  static renderPlayerData(scene) {
     // console.log(handleGraphics.playersOnMap);
-    await handleGraphics.fetchMapAndPlayerData();
     for (let p = 0; p < 4; ++p) {
       const player = handleGraphics.playersOnMap[p];
       // console.log(player);
@@ -99,7 +94,9 @@ export class handleGraphics {
           y,
           handleGraphics.PLAYER_INFO_WIDTH,
           handleGraphics.PLAYER_INFO_HEIGHT,
-          handleGraphics.PLAYER_INFO_COLOR,
+          player.health > 0
+            ? handleGraphics.PLAYER_INFO_COLOR
+            : handleGraphics.PLAYER_DEAD_INFO_COLOR,
           1
         )
         .setStrokeStyle(
@@ -131,27 +128,42 @@ export class handleGraphics {
   }
 
   static getPlayerString(player) {
-    return (
-      player.name +
-      "\n" +
-      "🛡️: " +
-      player.health +
-      "   " +
-      "⚔️: " +
-      player.power +
-      "\n" +
-      "🪵: " +
-      player.materials.wood +
-      "   " +
-      "🪨: " +
-      player.materials.rock
-    );
+    return player.name + "\n" + "❤️: " + player.health;
+  }
+
+  static renderBomb(scene) {
+    for (let  b= 0; b < this.bombs.length; ++b) {
+      const bomb = handleGraphics.bombs[b];
+      const i = bomb.x,
+        j = bomb.y;
+      let x =
+        j * handleGraphics.HEX_X_OFFSET +
+        (i % 2 == 0 ? 0 : handleGraphics.HEX_WIDTH / 2);
+      let y = i * handleGraphics.HEX_Y_OFFSET;
+      x += gameUtils.SCREEN_SIZE.w / 2;
+      y += gameUtils.SCREEN_SIZE.h / 2;
+
+      const graphics = scene.add.graphics();
+      graphics.fillCircle(x, y, handleGraphics.ICON_RADIUS);
+
+      const icon = scene.add.image(x, y, `icon${p}`);
+      icon.setScale(handleGraphics.ICON_SCALE);
+      icon.setMask(graphics.createGeometryMask());
+    }
+  }
+
+  static renderPlayerTurn(scene) {
+    //TODO
+  }
+
+  static renderTitle(scene) {
+    //TODO
   }
 
   static async renderPlayerOnBoard(scene) {
     for (let p = 0; p < 4; ++p) {
       const player = handleGraphics.playersOnMap[p];
-      // console.log(player);
+      if (player.health <= 0) continue;
       const i = player.x,
         j = player.y;
       let x =
@@ -170,14 +182,13 @@ export class handleGraphics {
     }
   }
 
-  static async fetchMapAndPlayerData() {
+  static async fetchPlayerData() {
     //TODO: link to backend
     // console.log("fetching map and player data");
     const roomNumber = new URLSearchParams(window.location.search).get("room");
-    const data = await fetchMapAndPlayerAPI(roomNumber).then((data) => {
-      handleGraphics.mapTiles = data.mapTiles;
+    const data = await fetchPlayerAPI(roomNumber).then((data) => {
       handleGraphics.playersOnMap = data.playersOnMap;
+      handleGraphics.bombs = data.bombs;
     });
-    // console.log(handleGraphics.mapTiles, handleGraphics.playersOnMap);
   }
 }

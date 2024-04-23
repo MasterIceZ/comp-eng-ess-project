@@ -103,7 +103,7 @@ export async function startGame(roomNumber) {
   }
 }
 
-export async function fetchMapAndPlayerAPI(roomNumber) {
+export async function fetchPlayerAPI(roomNumber) {
   const playersOnMap = [];
   const playerNames = await getRoomPlayers(roomNumber);
   for (let i = 0; i < playerNames.length; i++) {
@@ -113,12 +113,12 @@ export async function fetchMapAndPlayerAPI(roomNumber) {
     playersOnMap.push(player[0]);
   }
 
-  const mapTiles = await fetch(
-    `${BACKEND_URL}/tile?roomNumber=${roomNumber}`
+  const bombs = await fetch(
+    `${BACKEND_URL}/bomb?roomNumber=${roomNumber}`
   ).then((res) => res.json());
   return {
     playersOnMap,
-    mapTiles,
+    bombs,
   };
 }
 
@@ -135,7 +135,7 @@ export async function isGameStarted(roomNumber) {
   }
 }
 
-export async function handleMovePlayer(currentTile) {
+export async function handleMovePlayer(x, y, roomNumber) {
   try {
     const response = await fetch(`${BACKEND_URL}/player/move`, {
       method: "POST",
@@ -144,9 +144,9 @@ export async function handleMovePlayer(currentTile) {
       },
       body: JSON.stringify({
         cookie: getCookie("playerCookie"),
-        x: currentTile.x,
-        y: currentTile.y,
-        roomNumber: currentTile.roomNumber,
+        x: x,
+        y: y,
+        roomNumber: roomNumber,
       }),
     });
     const data = await response.json();
